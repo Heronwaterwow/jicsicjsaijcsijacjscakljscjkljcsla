@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your New Seed-Phrase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #1b1b1b;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .seed-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+
+        .seed-item {
+            display: flex;
+            align-items: center;
+            background-color: #232323;
+            border-radius: 16px;
+            padding: 16px;
+            height: 60px;
+        }
+
+        .seed-number {
+            color: #646464;
+            font-size: 18px;
+            margin-right: 16px;
+            width: 20px;
+            text-align: right;
+        }
+
+        .seed-word {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .button {
+            background-color: #232323;
+            border: none;
+            border-radius: 50px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: 500;
+            padding: 16px 32px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            align-self: center;
+            width: 100%;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: #2a2a2a;
+        }
+
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #646464;
+        }
+
+        .error {
+            color: #ff4d4d;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        .copy-button {
+            background-color: transparent;
+            border: 1px solid #3692a9;
+            border-radius: 50px;
+            color: #3692a9;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 8px 16px;
+            margin-top: 20px;
+            transition: all 0.3s;
+            align-self: center;
+        }
+
+        .copy-button:hover {
+            background-color: #3692a9;
+            color: #ffffff;
+        }
+
+        .copy-message {
+            color: #48ff91;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .copy-message.show {
+            opacity: 1;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your new<br>Seed-Phrase</h1>
+        
+        <div id="loading" class="loading">Loading your seed phrase...</div>
+        <div id="error" class="error" style="display: none;">Failed to load seed phrase. Please try again.</div>
+        
+        <div id="seed-grid" class="seed-grid" style="display: none;"></div>
+        
+        <div class="actions" id="actions" style="display: none;">
+            <button id="copy-button" class="copy-button">Copy to clipboard</button>
+            <div id="copy-message" class="copy-message">Seed phrase copied!</div>
+            <button id="further-button" class="button">farther</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const seedGrid = document.getElementById('seed-grid');
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const actions = document.getElementById('actions');
+            const copyButton = document.getElementById('copy-button');
+            const copyMessage = document.getElementById('copy-message');
+            const furtherButton = document.getElementById('further-button');
+            
+            let seedPhrase = [];
+            
+            // Функция для загрузки seed-фразы с сервера
+            async function loadSeedPhrase() {
+                try {
+                    const response = await fetch('/api/generate-seed-phrase');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        seedPhrase = data.seedPhrase;
+                        displaySeedPhrase(seedPhrase);
+                    } else {
+                        showError(data.message || 'Failed to load seed phrase');
+                    }
+                } catch (error) {
+                    console.error('Error loading seed phrase:', error);
+                    showError('Network error. Please try again.');
+                } finally {
+                    loading.style.display = 'none';
+                }
+            }
+            
+            // Функция для отображения seed-фразы
+            function displaySeedPhrase(words) {
+                seedGrid.innerHTML = '';
+                
+                words.forEach((word, index) => {
+                    const seedItem = document.createElement('div');
+                    seedItem.className = 'seed-item';
+                    
+                    const seedNumber = document.createElement('div');
+                    seedNumber.className = 'seed-number';
+                    seedNumber.textContent = index + 1;
+                    
+                    const seedWord = document.createElement('div');
+                    seedWord.className = 'seed-word';
+                    seedWord.textContent = word;
+                    
+                    seedItem.appendChild(seedNumber);
+                    seedItem.appendChild(seedWord);
+                    seedGrid.appendChild(seedItem);
+                });
+                
+                seedGrid.style.display = 'grid';
+                actions.style.display = 'flex';
+            }
+            
+            // Функция для отображения ошибки
+            function showError(message) {
+                error.textContent = message;
+                error.style.display = 'block';
+                seedGrid.style.display = 'none';
+                actions.style.display = 'none';
+            }
+            
+            // Обработчик для копирования seed-фразы в буфер обмена
+            copyButton.addEventListener('click', function() {
+                const seedPhraseText = seedPhrase.join(' ');
+                
+                navigator.clipboard.writeText(seedPhraseText)
+                    .then(() => {
+                        copyMessage.classList.add('show');
+                        setTimeout(() => {
+                            copyMessage.classList.remove('show');
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                        alert('Failed to copy to clipboard');
+                    });
+            });
+            
+            // Обработчик для кнопки "farther"
+            furtherButton.addEventListener('click', function() {
+                // Здесь можно добавить переход на следующую страницу
+                alert('Moving to the next step...');
+                // window.location.href = '/next-page.html';
+            });
+            
+            // Загрузка seed-фразы при загрузке страницы
+            loadSeedPhrase();
+            
+            // Для демонстрации, если сервер недоступен
+            // Раскомментируйте следующий код для тестирования без сервера
+            /*
+            setTimeout(() => {
+                const demoSeedPhrase = [
+                    'apple', 'banana', 'cherry', 'diamond', 'elephant', 'flower',
+                    'guitar', 'house', 'island', 'jungle', 'kangaroo', 'lemon'
+                ];
+                seedPhrase = demoSeedPhrase;
+                displaySeedPhrase(demoSeedPhrase);
+                loading.style.display = 'none';
+            }, 1500);
+            */
+        });
+    </script>
+</body>
+</html>

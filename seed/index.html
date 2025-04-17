@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your New Seed-Phrase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #1b1b1b;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .title {
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .seed-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+
+        .seed-item {
+            display: flex;
+            align-items: center;
+            background-color: #232323;
+            border-radius: 16px;
+            padding: 16px;
+            height: 60px;
+        }
+
+        .seed-number {
+            color: #646464;
+            font-size: 18px;
+            margin-right: 16px;
+            width: 20px;
+            text-align: right;
+        }
+
+        .seed-word {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .button {
+            background-color: #232323;
+            border: none;
+            border-radius: 50px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: 500;
+            padding: 16px 32px;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .button:hover {
+            background-color: #2a2a2a;
+        }
+
+        .button:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 36px;
+            }
+            
+            .seed-grid {
+                gap: 12px;
+            }
+            
+            .seed-item {
+                padding: 12px;
+                height: 50px;
+            }
+            
+            .seed-number {
+                font-size: 16px;
+            }
+            
+            .seed-word {
+                font-size: 18px;
+            }
+            
+            .button {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Your new<br>Seed-Phrase</h1>
+        
+        <div class="seed-grid" id="seed-grid">
+            <!-- Seed phrase items will be generated here -->
+        </div>
+        
+        <div class="button-container">
+            <button class="button" id="farther-button">farther</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const seedGrid = document.getElementById('seed-grid');
+            const fartherButton = document.getElementById('farther-button');
+            
+            // Список слов для seed-фразы (можно заменить на реальные слова из BIP-39)
+            const seedWords = [
+                'abandon', 'ability', 'able', 'about', 'above', 'absent',
+                'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident',
+                'account', 'accuse', 'achieve', 'acid', 'acoustic', 'acquire',
+                'across', 'act', 'action', 'actor', 'actress', 'actual',
+                'adapt', 'add', 'addict', 'address', 'adjust', 'admit',
+                'adult', 'advance', 'advice', 'aerobic', 'affair', 'afford',
+                'afraid', 'again', 'age', 'agent', 'agree', 'ahead',
+                'aim', 'air', 'airport', 'aisle', 'alarm', 'album'
+            ];
+            
+            // Функция для генерации случайной seed-фразы
+            function generateSeedPhrase() {
+                const seedPhrase = [];
+                
+                // Выбираем 12 случайных слов из списка
+                for (let i = 0; i < 12; i++) {
+                    const randomIndex = Math.floor(Math.random() * seedWords.length);
+                    seedPhrase.push(seedWords[randomIndex]);
+                }
+                
+                return seedPhrase;
+            }
+            
+            // Функция для отображения seed-фразы
+            function displaySeedPhrase(words) {
+                seedGrid.innerHTML = '';
+                
+                words.forEach((word, index) => {
+                    const seedItem = document.createElement('div');
+                    seedItem.className = 'seed-item';
+                    
+                    const seedNumber = document.createElement('div');
+                    seedNumber.className = 'seed-number';
+                    seedNumber.textContent = index + 1;
+                    
+                    const seedWord = document.createElement('div');
+                    seedWord.className = 'seed-word';
+                    seedWord.textContent = word;
+                    
+                    seedItem.appendChild(seedNumber);
+                    seedItem.appendChild(seedWord);
+                    seedGrid.appendChild(seedItem);
+                });
+            }
+            
+            // Обработчик для кнопки "farther"
+            fartherButton.addEventListener('click', function() {
+                // Здесь можно добавить переход на следующую страницу или другое действие
+                alert('Moving to the next step...');
+            });
+            
+            // Генерируем и отображаем seed-фразу при загрузке страницы
+            const seedPhrase = generateSeedPhrase();
+            displaySeedPhrase(seedPhrase);
+            
+            // Сохраняем seed-фразу в localStorage для демонстрации
+            localStorage.setItem('seedPhrase', JSON.stringify(seedPhrase));
+            
+            // Добавляем возможность копирования seed-фразы при клике на сетку
+            seedGrid.addEventListener('click', function() {
+                const seedPhraseText = seedPhrase.join(' ');
+                
+                // Копируем в буфер обмена
+                navigator.clipboard.writeText(seedPhraseText)
+                    .then(() => {
+                        alert('Seed phrase copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

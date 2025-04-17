@@ -1,0 +1,30 @@
+{
+    "name": "seed-phrase-api",
+    "version": "1.0.0",
+    "description": "API for generating and retrieving seed phrases",
+    "main": "server.js",
+    "type": "module",
+    "scripts": {
+      "start": "node server.js",
+      "dev": "nodemon server.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1",
+      "body-parser": "^1.19.0",
+      "sqlite3": "^5.0.2",
+      "@types/sqlite3": "^2.7.3"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.7"
+    },
+    "keywords": [
+      "seed",
+      "phrase",
+      "api",
+      "generation",
+      "retrieval"
+    ],
+    "author": "Your Name",
+    "license": "MIT"
+  }
+  

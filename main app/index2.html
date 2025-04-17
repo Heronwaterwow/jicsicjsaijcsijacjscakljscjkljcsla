@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto App</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark mode (default) */
+        .dark-mode {
+            --bg-color: #1b1b1b;
+            --text-color: #f7f7f7;
+            --card-bg: #242426;
+            --secondary-text: #9b9b9d;
+            --icon-bg: #262626;
+            --button-bg: #2b2b2d;
+            --border-color: #262626;
+        }
+
+        /* Light mode */
+        .light-mode {
+            --bg-color: #f7f7f7;
+            --text-color: #1b1b1b;
+            --card-bg: #ffffff;
+            --secondary-text: #666666;
+            --icon-bg: #e6e6e6;
+            --button-bg: #e6e6e6;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-size: 12px; /* Increased from 8px */
+        }
+
+        /* Header */
+        header {
+            padding: 18px 18px 12px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 22.5px; /* Increased from 15px */
+            font-weight: 500;
+        }
+
+        /* Home page styles */
+        .home-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 94.5px; /* Increased for larger bottom nav */
+        }
+
+        .wallet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+        }
+
+        .expand-icon {
+            width: 18px; /* Increased from 12px */
+            height: 18px; /* Increased from 12px */
+            color: var(--text-color);
+        }
+
+        .wallet-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 18px; /* Increased from 12px */
+            font-weight: 500;
+        }
+
+        .search-icon {
+            width: 21px; /* Increased from 14px */
+            height: 21px; /* Increased from 14px */
+            color: var(--text-color);
+        }
+
+        .balance-section {
+            text-align: center;
+            padding: 15px 0 22.5px;
+        }
+
+        .main-balance {
+            font-size: 36px; /* Increased from 24px */
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .secondary-balance {
+            font-size: 15px; /* Increased from 10px */
+            color: var(--secondary-text);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 22.5px;
+        }
+
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            /* 1.3x larger for action buttons */
+            transform: scale(1.3);
+            margin: 15px;
+        }
+
+        .button-icon {
+            width: 45px; /* Increased from 30px */
+            height: 45px; /* Increased from 30px */
+            background-color: var(--button-bg);
+            border-radius: 12px; /* Increased from 8px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button-icon.earn {
+            background-color: #48f98f;
+        }
+
+        .button-icon svg {
+            width: 18px; /* Increased from 12px */
+            height: 18px; /* Increased from 12px */
+            color: var(--text-color);
+        }
+
+        .button-icon.earn svg {
+            color: #000;
+        }
+
+        .button-label {
+            font-size: 12px; /* Increased from 8px */
+        }
+
+        .promo-banner {
+            margin: 0 15px 22.5px;
+            background-color: var(--card-bg);
+            border-radius: 12px; /* Increased from 8px */
+            padding: 15px;
+            display: flex;
+            position: relative;
+            border: 1px solid #31ccfa;
+        }
+
+        .banner-image {
+            width: 60px; /* Increased from 40px */
+            height: 60px; /* Increased from 40px */
+            margin-right: 12px;
+        }
+
+        .banner-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .banner-title {
+            font-size: 15px; /* Increased from 10px */
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .banner-cta {
+            color: #48f98f;
+            font-size: 13.5px; /* Increased from 9px */
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 9px;
+            right: 9px;
+            width: 18px; /* Increased from 12px */
+            height: 18px; /* Increased from 12px */
+            color: var(--secondary-text);
+            cursor: pointer;
+        }
+
+        .crypto-section {
+            padding: 0 15px;
+        }
+
+        .crypto-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .crypto-title {
+            font-size: 18px; /* Increased from 12px */
+            font-weight: 500;
+        }
+
+        .filter-icon {
+            width: 18px; /* Increased from 12px */
+            height: 18px; /* Increased from 12px */
+            color: var(--secondary-text);
+        }
+
+        .crypto-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .crypto-item {
+            background-color: var(--card-bg);
+            border-radius: 12px; /* Increased from 8px */
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .crypto-info {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .crypto-logo {
+            width: 30px; /* Increased from 20px */
+            height: 30px; /* Increased from 20px */
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .crypto-name {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .crypto-symbol {
+            font-size: 13.5px; /* Increased from 9px */
+            font-weight: 500;
+        }
+
+        .crypto-fullname {
+            font-size: 12px; /* Increased from 8px */
+            color: var(--secondary-text);
+        }
+
+        .crypto-balance {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .crypto-amount {
+            font-size: 13.5px; /* Increased from 9px */
+            font-weight: 500;
+        }
+
+        .crypto-value {
+            font-size: 12px; /* Increased from 8px */
+            color: var(--secondary-text);
+        }
+
+        /* Earn page styles */
+        .earn-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 94.5px; /* Increased for larger bottom nav */
+        }
+
+        .staking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 0 15px;
+        }
+
+        .staking-item {
+            background-color: var(--card-bg);
+            border-radius: 12px; /* Increased from 8px */
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .staking-info {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .staking-logo {
+            width: 30px; /* Increased from 20px */
+            height: 30px; /* Increased from 20px */
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .staking-name {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .staking-symbol {
+            font-size: 13.5px; /* Increased from 9px */
+            font-weight: 500;
+        }
+
+        .staking-fullname {
+            font-size: 12px; /* Increased from 8px */
+            color: var(--secondary-text);
+        }
+
+        .staking-apr {
+            font-size: 13.5px; /* Increased from 9px */
+            font-weight: 500;
+            color: #48f98f;
+        }
+
+        /* Settings page styles */
+        .settings-container {
+            flex: 1;
+            padding: 0 18px;
+            padding-bottom: 94.5px; /* Increased for larger bottom nav */
+        }
+
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            cursor: pointer;
+            /* 1.3x larger for settings items */
+            transform: scale(1.3);
+            margin: 10px 0;
+        }
+
+        .settings-item-with-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            /* 1.3x larger for settings items with toggle */
+            transform: scale(1.3);
+            margin: 10px 0;
+        }
+
+        .settings-icon {
+            width: 30px; /* Increased from 20px */
+            height: 30px; /* Increased from 20px */
+            background-color: var(--icon-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .settings-icon svg {
+            width: 18px; /* Increased from 12px */
+            height: 18px; /* Increased from 12px */
+            color: var(--secondary-text);
+        }
+
+        .settings-label {
+            font-size: 15px; /* Increased from 10px */
+        }
+
+        .settings-left {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Toggle switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 37.5px; /* Increased from 25px */
+            height: 22.5px; /* Increased from 15px */
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--icon-bg);
+            transition: .4s;
+            border-radius: 25.5px; /* Increased from 17px */
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 19.5px; /* Increased from 13px */
+            width: 19.5px; /* Increased from 13px */
+            left: 1.5px; /* Increased from 1px */
+            bottom: 1.5px; /* Increased from 1px */
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #48f98f;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(15px); /* Increased from 10px */
+        }
+
+        /* History page styles */
+        .history-container {
+            flex: 1;
+            padding: 0 18px;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 94.5px; /* Increased for larger bottom nav */
+        }
+
+        .networks-filter {
+            background-color: var(--icon-bg);
+            border-radius: 22.5px; /* Increased from 15px */
+            padding: 9px 18px;
+            display: inline-block;
+            margin: 12px 0;
+            font-size: 15px; /* Increased from 10px */
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .search-icon-container {
+            background-color: #f7f7f7;
+            width: 135px; /* Increased from 90px */
+            height: 90px; /* Increased from 60px */
+            border-radius: 9px; /* Increased from 6px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .search-icon-large {
+            width: 45px; /* Increased from 30px */
+            height: 45px; /* Increased from 30px */
+            color: #00a2ff;
+        }
+
+        .placeholder-lines {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 22.5px;
+        }
+
+        .placeholder-column {
+            display: flex;
+            flex-direction: column;
+            gap: 7.5px;
+        }
+
+        .placeholder-line {
+            height: 7.5px; /* Increased from 5px */
+            width: 60px; /* Increased from 40px */
+            background-color: var(--secondary-text);
+            opacity: 0.3;
+            border-radius: 3.75px; /* Increased from 2.5px */
+        }
+
+        .empty-message {
+            font-size: 16.5px; /* Increased from 11px */
+            color: var(--secondary-text);
+            max-width: 300px; /* Increased from 200px */
+            line-height: 1.4;
+        }
+
+        /* Bottom navigation - 1.8x larger */
+        .bottom-nav {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 94.5px; /* 1.8x larger from 52.5px */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 0;
+            cursor: pointer;
+            /* 1.8x larger for nav items */
+            transform: scale(1.8);
+        }
+
+        .nav-item svg {
+            width: 18px; /* Increased from 12px */
+            height: 18px; /* Increased from 12px */
+            color: var(--secondary-text);
+            margin-bottom: 3px;
+        }
+
+        .nav-item span {
+            font-size: 10.5px; /* Increased from 7px */
+            color: var(--secondary-text);
+        }
+
+        .nav-item.active svg,
+        .nav-item.active span {
+            color: #48f98f;
+        }
+
+        /* Page transitions */
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page -->
+    <div id="home-page" class="page">
+        <!-- Wallet Header -->
+        <div class="wallet-header">
+            <div class="expand-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <circle cx="15.5" cy="8.5" r="1.5"></circle>
+                    <circle cx="15.5" cy="15.5" r="1.5"></circle>
+                    <circle cx="8.5" cy="15.5" r="1.5"></circle>
+                </svg>
+            </div>
+            <div class="wallet-selector">
+                Main wallet
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+            <div class="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Balance Section -->
+        <div class="balance-section">
+            <div class="main-balance">0,00$</div>
+            <div class="secondary-balance">0,00$ (0.00%)</div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <div class="action-button">
+                <div class="button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                        <polyline points="5 12 12 5 19 12"></polyline>
+                    </svg>
+                </div>
+                <div class="button-label">Send</div>
+            </div>
+            <div class="action-button">
+                <div class="button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                        <rect x="9" y="9" width="6" height="6"></rect>
+                    </svg>
+                </div>
+                <div class="button-label">Receive</div>
+            </div>
+            <div class="action-button">
+                <div class="button-icon earn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </div>
+                <div class="button-label">Earn</div>
+            </div>
+        </div>
+
+        <!-- Promo Banner -->
+        <div class="promo-banner">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPHBhdGggZD0iTTMwIDI1QzMwIDIwIDM1IDE1IDQwIDE1QzQ1IDE1IDUwIDIwIDUwIDI1QzUwIDMwIDQ1IDM1IDQwIDM1QzM1IDM1IDMwIDMwIDMwIDI1WiIgZmlsbD0iI0ZGOTBGRiIvPgo8cGF0aCBkPSJNMjUgNDBDMjUgMzAgMzUgMjUgNDAgMjVDNDUgMjUgNTUgMzAgNTUgNDBDNTUgNTAgNDUgNjAgNDAgNjBDMzUgNjAgMjUgNTAgMjUgNDBaIiBmaWxsPSIjRkY5MEZGIi8+CjxjaXJjbGUgY3g9IjM1IiBjeT0iMzAiIHI9IjMiIGZpbGw9ImJsYWNrIi8+CjxjaXJjbGUgY3g9IjQ1IiBjeT0iMzAiIHI9IjMiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik0zNSA0MEM0MCA0NSA0NSA0MCA0MCAzNSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxjaXJjbGUgY3g9IjIwIiBjeT0iNTAiIHI9IjgiIGZpbGw9IiNGRjkwRkYiLz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI1MCIgcj0iOCIgZmlsbD0iI0ZGOTBGRiIvPgo8cGF0aCBkPSJNMTUgMjBMMjAgMTVNNjAgMTVMNjUgMjBNMTUgNjBMMjAgNjVNNjAgNjVMNjUgNjAiIHN0cm9rZT0iI0ZGOTBGRiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPg==" alt="Piggy Bank" class="banner-image">
+            <div class="banner-content">
+                <div class="banner-title">Earn up to 30% yield on-chain</div>
+                <div class="banner-cta">
+                    Start earning
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </div>
+            </div>
+            <div class="close-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Crypto Section -->
+        <div class="crypto-section">
+            <div class="crypto-header">
+                <div class="crypto-title">Crypto</div>
+                <div class="filter-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="21" x2="4" y2="14"></line>
+                        <line x1="4" y1="10" x2="4" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12" y2="3"></line>
+                        <line x1="20" y1="21" x2="20" y2="16"></line>
+                        <line x1="20" y1="12" x2="20" y2="3"></line>
+                        <line x1="1" y1="14" x2="7" y2="14"></line>
+                        <line x1="9" y1="8" x2="15" y2="8"></line>
+                        <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="crypto-list">
+                <!-- Bitcoin -->
+                <div class="crypto-item">
+                    <div class="crypto-info">
+                        <div class="crypto-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#F7931A"/>
+                                <path d="M27.5 17.5C27.1 15.1 25 14.2 22.4 13.9L21.8 11.1L20.2 10.8L20.8 13.5C20.4 13.4 19.9 13.3 19.5 13.2L18.9 10.5L17.3 10.2L17.9 13C17.5 12.9 17.2 12.8 16.8 12.7L14.7 12.3L15 14.1C15 14.1 16.2 14.4 16.1 14.4C16.8 14.6 16.9 15 16.9 15.4L17.6 18.6C17.7 18.6 17.7 18.6 17.8 18.6L17.6 18.6L18.5 23C18.5 23.2 18.4 23.5 18 23.4C18 23.4 16.9 23.1 16.9 23.1L16.3 25.1L18.3 25.5C18.7 25.6 19.1 25.7 19.5 25.8L18.9 28.6L20.5 28.9L21.1 26.1C21.5 26.2 21.9 26.3 22.3 26.4L21.7 29.2L23.3 29.5L23.9 26.7C27.2 27.2 29.6 26.9 30.6 23.9C31.4 21.5 30.5 20.1 28.7 19.2C30 18.9 31 18 31.3 16.3L31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3L27.5 17.5ZM26.7 22.9C26.1 25.3 22.2 24 20.9 23.7L21.7 20C23 20.3 27.3 20.4 26.7 22.9ZM27.3 16.3C26.8 18.5 23.5 17.4 22.4 17.1L23.1 13.8C24.2 14.1 27.8 14 27.3 16.3Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="crypto-name">
+                            <div class="crypto-symbol">BTC</div>
+                            <div class="crypto-fullname">Bitcoin</div>
+                        </div>
+                    </div>
+                    <div class="crypto-balance">
+                        <div class="crypto-amount">0.0000</div>
+                        <div class="crypto-value">0 USDT</div>
+                    </div>
+                </div>
+
+                <!-- Ethereum -->
+                <div class="crypto-item">
+                    <div class="crypto-info">
+                        <div class="crypto-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#627EEA"/>
+                                <path d="M20 8V16.87L27.5 20.25L20 8Z" fill="white" fill-opacity="0.602"/>
+                                <path d="M20 8L12.5 20.25L20 16.87V8Z" fill="white"/>
+                                <path d="M20 27.38V32L27.5 21.9L20 27.38Z" fill="white" fill-opacity="0.602"/>
+                                <path d="M20 32V27.38L12.5 21.9L20 32Z" fill="white"/>
+                                <path d="M20 25.75L27.5 20.25L20 16.88V25.75Z" fill="white" fill-opacity="0.2"/>
+                                <path d="M12.5 20.25L20 25.75V16.88L12.5 20.25Z" fill="white" fill-opacity="0.602"/>
+                            </svg>
+                        </div>
+                        <div class="crypto-name">
+                            <div class="crypto-symbol">ETH</div>
+                            <div class="crypto-fullname">Ethereum</div>
+                        </div>
+                    </div>
+                    <div class="crypto-balance">
+                        <div class="crypto-amount">0.0000</div>
+                        <div class="crypto-value">0 USDT</div>
+                    </div>
+                </div>
+
+                <!-- Solana -->
+                <div class="crypto-item">
+                    <div class="crypto-info">
+                        <div class="crypto-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#000000"/>
+                                <path d="M12.25 24.75L14.5 27H27.75L25.5 24.75H12.25Z" fill="#00FFA3"/>
+                                <path d="M12.25 15.25L14.5 13H27.75L25.5 15.25H12.25Z" fill="#00FFA3"/>
+                                <path d="M12.25 20L14.5 17.75H27.75L25.5 20H12.25Z" fill="#00FFA3"/>
+                            </svg>
+                        </div>
+                        <div class="crypto-name">
+                            <div class="crypto-symbol">SOL</div>
+                            <div class="crypto-fullname">Solana</div>
+                        </div>
+                    </div>
+                    <div class="crypto-balance">
+                        <div class="crypto-amount">0.0000</div>
+                        <div class="crypto-value">0 USDT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earn Page -->
+    <div id="earn-page" class="page active">
+        <!-- Header -->
+        <header>
+            <h1>Native staking</h1>
+        </header>
+
+        <!-- Staking List -->
+        <div class="earn-container">
+            <div class="staking-list">
+                <!-- Bitcoin -->
+                <div class="staking-item">
+                    <div class="staking-info">
+                        <div class="staking-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#F7931A"/>
+                                <path d="M27.5 17.5C27.1 15.1 25 14.2 22.4 13.9L21.8 11.1L20.2 10.8L20.8 13.5C20.4 13.4 19.9 13.3 19.5 13.2L18.9 10.5L17.3 10.2L17.9 13C17.5 12.9 17.2 12.8 16.8 12.7L14.7 12.3L15 14.1C15 14.1 16.2 14.4 16.1 14.4C16.8 14.6 16.9 15 16.9 15.4L17.6 18.6C17.7 18.6 17.7 18.6 17.8 18.6L17.6 18.6L18.5 23C18.5 23.2 18.4 23.5 18 23.4C18 23.4 16.9 23.1 16.9 23.1L16.3 25.1L18.3 25.5C18.7 25.6 19.1 25.7 19.5 25.8L18.9 28.6L20.5 28.9L21.1 26.1C21.5 26.2 21.9 26.3 22.3 26.4L21.7 29.2L23.3 29.5L23.9 26.7C27.2 27.2 29.6 26.9 30.6 23.9C31.4 21.5 30.5 20.1 28.7 19.2C30 18.9 31 18 31.3 16.3L31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3L27.5 17.5ZM26.7 22.9C26.1 25.3 22.2 24 20.9 23.7L21.7 20C23 20.3 27.3 20.4 26.7 22.9ZM27.3 16.3C26.8 18.5 23.5 17.4 22.4 17.1L23.1 13.8C24.2 14.1 27.8 14 27.3 16.3Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="staking-name">
+                            <div class="staking-symbol">BTC</div>
+                            <div class="staking-fullname">Bitcoin</div>
+                        </div>
+                    </div>
+                    <div class="staking-apr">3,53% ARP</div>
+                </div>
+
+                <!-- Ethereum -->
+                <div class="staking-item">
+                    <div class="staking-info">
+                        <div class="staking-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#627EEA"/>
+                                <path d="M20 8V16.87L27.5 20.25L20 8Z" fill="white" fill-opacity="0.602"/>
+                                <path d="M20 8L12.5 20.25L20 16.87V8Z" fill="white"/>
+                                <path d="M20 27.38V32L27.5 21.9L20 27.38Z" fill="white" fill-opacity="0.602"/>
+                                <path d="M20 32V27.38L12.5 21.9L20 32Z" fill="white"/>
+                                <path d="M20 25.75L27.5 20.25L20 16.88V25.75Z" fill="white" fill-opacity="0.2"/>
+                                <path d="M12.5 20.25L20 25.75V16.88L12.5 20.25Z" fill="white" fill-opacity="0.602"/>
+                            </svg>
+                        </div>
+                        <div class="staking-name">
+                            <div class="staking-symbol">ETH</div>
+                            <div class="staking-fullname">Ethereum</div>
+                        </div>
+                    </div>
+                    <div class="staking-apr">3,53% ARP</div>
+                </div>
+
+                <!-- Solana -->
+                <div class="staking-item">
+                    <div class="staking-info">
+                        <div class="staking-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#000000"/>
+                                <path d="M12.25 24.75L14.5 27H27.75L25.5 24.75H12.25Z" fill="#00FFA3"/>
+                                <path d="M12.25 15.25L14.5 13H27.75L25.5 15.25H12.25Z" fill="#00FFA3"/>
+                                <path d="M12.25 20L14.5 17.75H27.75L25.5 20H12.25Z" fill="#00FFA3"/>
+                            </svg>
+                        </div>
+                        <div class="staking-name">
+                            <div class="staking-symbol">SOL</div>
+                            <div class="staking-fullname">Solana</div>
+                        </div>
+                    </div>
+                    <div class="staking-apr">4,60% ARP</div>
+                </div>
+
+                <!-- Bitcoin (repeated) -->
+                <div class="staking-item">
+                    <div class="staking-info">
+                        <div class="staking-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#F7931A"/>
+                                <path d="M27.5 17.5C27.1 15.1 25 14.2 22.4 13.9L21.8 11.1L20.2 10.8L20.8 13.5C20.4 13.4 19.9 13.3 19.5 13.2L18.9 10.5L17.3 10.2L17.9 13C17.5 12.9 17.2 12.8 16.8 12.7L14.7 12.3L15 14.1C15 14.1 16.2 14.4 16.1 14.4C16.8 14.6 16.9 15 16.9 15.4L17.6 18.6C17.7 18.6 17.7 18.6 17.8 18.6L17.6 18.6L18.5 23C18.5 23.2 18.4 23.5 18 23.4C18 23.4 16.9 23.1 16.9 23.1L16.3 25.1L18.3 25.5C18.7 25.6 19.1 25.7 19.5 25.8L18.9 28.6L20.5 28.9L21.1 26.1C21.5 26.2 21.9 26.3 22.3 26.4L21.7 29.2L23.3 29.5L23.9 26.7C27.2 27.2 29.6 26.9 30.6 23.9C31.4 21.5 30.5 20.1 28.7 19.2C30 18.9 31 18 31.3 16.3L31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3L27.5 17.5ZM26.7 22.9C26.1 25.3 22.2 24 20.9 23.7L21.7 20C23 20.3 27.3 20.4 26.7 22.9ZM27.3 16.3C26.8 18.5 23.5 17.4 22.4 17.1L23.1 13.8C24.2 14.1 27.8 14 27.3 16.3Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="staking-name">
+                            <div class="staking-symbol">BTC</div>
+                            <div class="staking-fullname">Bitcoin</div>
+                        </div>
+                    </div>
+                    <div class="staking-apr">3,53% ARP</div>
+                </div>
+
+                <!-- Ethereum (repeated) -->
+                <div class="staking-item">
+                    <div class="staking-info">
+                        <div class="staking-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#627EEA"/>
+                                <path d="M20 8V16.87L27.5 20.25L20 8Z" fill="white" fill-opacity="0.602"/>
+                                <path d="M20 8L12.5 20.25L20 16.87V8Z" fill="white"/>
+                                <path d="M20 27.38V32L27.5 21.9L20 27.38Z" fill="white" fill-opacity="0.602"/>
+                                <path d="M20 32V27.38L12.5 21.9L20 32Z" fill="white"/>
+                                <path d="M20 25.75L27.5 20.25L20 16.88V25.75Z" fill="white" fill-opacity="0.2"/>
+                                <path d="M12.5 20.25L20 25.75V16.88L12.5 20.25Z" fill="white" fill-opacity="0.602"/>
+                            </svg>
+                        </div>
+                        <div class="staking-name">
+                            <div class="staking-symbol">ETH</div>
+                            <div class="staking-fullname">Ethereum</div>
+                        </div>
+                    </div>
+                    <div class="staking-apr">3,53% ARP</div>
+                </div>
+
+                <!-- Solana (repeated) -->
+                <div class="staking-item">
+                    <div class="staking-info">
+                        <div class="staking-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#000000"/>
+                                <path d="M12.25 24.75L14.5 27H27.75L25.5 24.75H12.25Z" fill="#00FFA3"/>
+                                <path d="M12.25 15.25L14.5 13H27.75L25.5 15.25H12.25Z" fill="#00FFA3"/>
+                                <path d="M12.25 20L14.5 17.75H27.75L25.5 20H12.25Z" fill="#00FFA3"/>
+                            </svg>
+                        </div>
+                        <div class="staking-name">
+                            <div class="staking-symbol">SOL</div>
+                            <div class="staking-fullname">Solana</div>
+                        </div>
+                    </div>
+                    <div class="staking-apr">4,60% ARP</div>
+                </div>
+
+                <!-- Bitcoin (repeated again) -->
+                <div class="staking-item">
+                    <div class="staking-info">
+                        <div class="staking-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#F7931A"/>
+                                <path d="M27.5 17.5C27.1 15.1 25 14.2 22.4 13.9L21.8 11.1L20.2 10.8L20.8 13.5C20.4 13.4 19.9 13.3 19.5 13.2L18.9 10.5L17.3 10.2L17.9 13C17.5 12.9 17.2 12.8 16.8 12.7L14.7 12.3L15 14.1C15 14.1 16.2 14.4 16.1 14.4C16.8 14.6 16.9 15 16.9 15.4L17.6 18.6C17.7 18.6 17.7 18.6 17.8 18.6L17.6 18.6L18.5 23C18.5 23.2 18.4 23.5 18 23.4C18 23.4 16.9 23.1 16.9 23.1L16.3 25.1L18.3 25.5C18.7 25.6 19.1 25.7 19.5 25.8L18.9 28.6L20.5 28.9L21.1 26.1C21.5 26.2 21.9 26.3 22.3 26.4L21.7 29.2L23.3 29.5L23.9 26.7C27.2 27.2 29.6 26.9 30.6 23.9C31.4 21.5 30.5 20.1 28.7 19.2C30 18.9 31 18 31.3 16.3L31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3C31.3 16.3 31.3 16.3 31.3 16.3L27.5 17.5ZM26.7 22.9C26.1 25.3 22.2 24 20.9 23.7L21.7 20C23 20.3 27.3 20.4 26.7 22.9ZM27.3 16.3C26.8 18.5 23.5 17.4 22.4 17.1L23.1 13.8C24.2 14.1 27.8 14 27.3 16.3Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="staking-name">
+                            <div class="staking-symbol">BTC</div>
+                            <div class="staking-fullname">Bitcoin</div>
+                        </div>
+                    </div>
+                    <div class="staking-apr">3,53% ARP</div>
+                </div>
+
+                <!-- Ethereum (repeated again) -->
+                <div class="staking-item">
+                    <div class="staking-info">
+                        <div class="staking-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#627EEA"/>
+                                <path d="M20 8V16.87L27.5 20.25L20 8Z" fill="white" fill-opacity="0.602"/>
+                                <path d="M20 8L12.5 20.25L20 16.87V8Z" fill="white"/>
+                                <path d="M20 27.38V32L27.5 21.9L20 27.38Z" fill="white" fill-opacity="0.602"/>
+                                <path d="M20 32V27.38L12.5 21.9L20 32Z" fill="white"/>
+                                <path d="M20 25.75L27.5 20.25L20 16.88V25.75Z" fill="white" fill-opacity="0.2"/>
+                                <path d="M12.5 20.25L20 25.75V16.88L12.5 20.25Z" fill="white" fill-opacity="0.602"/>
+                            </svg>
+                        </div>
+                        <div class="staking-name">
+                            <div class="staking-symbol">ETH</div>
+                            <div class="staking-fullname">Ethereum</div>
+                        </div>
+                    </div>
+                    <div class="staking-apr">3,53% ARP</div>
+                </div>
+
+                <!-- Solana (repeated again) -->
+                <div class="staking-item">
+                    <div class="staking-info">
+                        <div class="staking-logo">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="20" fill="#000000"/>
+                                <path d="M12.25 24.75L14.5 27H27.75L25.5 24.75H12.25Z" fill="#00FFA3"/>
+                                <path d="M12.25 15.25L14.5 13H27.75L25.5 15.25H12.25Z" fill="#00FFA3"/>
+                                <path d="M12.25 20L14.5 17.75H27.75L25.5 20H12.25Z" fill="#00FFA3"/>
+                            </svg>
+                        </div>
+                        <div class="staking-name">
+                            <div class="staking-symbol">SOL</div>
+                            <div class="staking-fullname">Solana</div>
+                        </div>
+                    </div>
+                    <div class="staking-apr">4,60% ARP</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div id="settings-page" class="page">
+        <!-- Header -->
+        <header>
+            <h1>Settings</h1>
+        </header>
+
+        <!-- Settings List -->
+        <div class="settings-container">
+            <div class="settings-list">
+                <!-- Dark Mode -->
+                <div class="settings-item-with-toggle">
+                    <div class="settings-left">
+                        <div class="settings-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                                <path d="M10.5 1.5v3" />
+                                <path d="M14 3l-1.5 3" />
+                            </svg>
+                        </div>
+                        <span class="settings-label">Dark</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Price Alerts -->
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <span class="settings-label">Price Alerts</span>
+                </div>
+
+                <!-- Scan QR code -->
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <rect x="7" y="7" width="3" height="3"></rect>
+                            <rect x="14" y="7" width="3" height="3"></rect>
+                            <rect x="7" y="14" width="3" height="3"></rect>
+                            <rect x="14" y="14" width="3" height="3"></rect>
+                        </svg>
+                    </div>
+                    <span class="settings-label">Scan QR code</span>
+                </div>
+
+                <!-- Wallet connect -->
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M7 10H3V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1" />
+                            <path d="M7 21h10a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2z" />
+                        </svg>
+                    </div>
+                    <span class="settings-label">Wallet connect</span>
+                </div>
+
+                <!-- Settings -->
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </div>
+                    <span class="settings-label">Settings</span>
+                </div>
+
+                <!-- Security -->
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <span class="settings-label">Security</span>
+                </div>
+
+                <!-- Notifications -->
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </div>
+                    <span class="settings-label">Notifications</span>
+                </div>
+
+                <!-- Help Center -->
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <span class="settings-label">Help Center</span>
+                </div>
+
+                <!-- Support -->
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23">  y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </div>
+                    <span class="settings-label">Support</span>
+                </div>
+
+                <!-- About Us -->
+                <div class="settings-item">
+                    <div class="settings-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </div>
+                    <span class="settings-label">About Us</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Page -->
+    <div id="history-page" class="page">
+        <!-- Header -->
+        <header>
+            <h1>History</h1>
+        </header>
+
+        <!-- History Content -->
+        <div class="history-container">
+            <!-- Networks Filter -->
+            <div class="networks-filter">
+                all networks
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state">
+                <!-- Search Icon -->
+                <div class="search-icon-container">
+                    <svg class="search-icon-large" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                
+                <!-- Placeholder Lines -->
+                <div class="placeholder-lines">
+                    <div class="placeholder-column">
+                        <div class="placeholder-line"></div>
+                        <div class="placeholder-line"></div>
+                        <div class="placeholder-line"></div>
+                    </div>
+                    <div class="placeholder-column">
+                        <div class="placeholder-line"></div>
+                        <div class="placeholder-line"></div>
+                        <div class="placeholder-line"></div>
+                    </div>
+                </div>
+                
+                <!-- Empty Message -->
+                <p class="empty-message">
+                    Transactions will be displayed here. Can't find the transaction? Refresh the page
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item" data-page="home">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Home</span>
+        </div>
+        <div class="nav-item active" data-page="earn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 7V3m0 4c-2 0-6 3-6 8 0 3 2 5 6 5s6-2 6-5c0-5-4-8-6-8z"></path>
+                <path d="M9 13h6"></path>
+                <path d="M9 17h6"></path>
+            </svg>
+            <span>Earn</span>
+        </div>
+        <div class="nav-item" data-page="history">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>Histori</span>
+        </div>
+        <div class="nav-item" data-page="settings">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Settings</span>
+        </div>
+    </div>
+
+    <script>
+        // Page navigation
+        const pages = {
+            home: document.getElementById('home-page'),
+            earn: document.getElementById('earn-page'),
+            settings: document.getElementById('settings-page'),
+            history: document.getElementById('history-page')
+        };
+
+        // Get all navigation items
+        const navItems = document.querySelectorAll('.nav-item');
+
+        // Add click event listeners to navigation items
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const pageName = this.getAttribute('data-page');
+                
+                // Only handle home, earn, history and settings navigation
+                if (pageName === 'home' || pageName === 'earn' || pageName === 'history' || pageName === 'settings') {
+                    // Hide all pages
+                    Object.values(pages).forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    
+                    // Show the selected page
+                    pages[pageName].classList.add('active');
+                    
+                    // Update active state in all navigation bars
+                    document.querySelectorAll('.bottom-nav').forEach(nav => {
+                        // Remove active class from all items
+                        nav.querySelectorAll('.nav-item').forEach(navItem => {
+                            navItem.classList.remove('active');
+                        });
+                        
+                        // Add active class to the clicked item type
+                        nav.querySelector(`.nav-item[data-page="${pageName}"]`).classList.add('active');
+                    });
+                } else {
+                    console.log(`Navigating to: ${pageName} (not implemented)`);
+                }
+            });
+        });
+
+        // Dark mode toggle functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        darkModeToggle.addEventListener('change', function() {
+            // This is where you would implement actual dark/light mode switching
+            // For this example, we'll just log the state
+            if (this.checked) {
+                console.log('Dark mode enabled');
+            } else {
+                console.log('Dark mode disabled');
+            }
+        });
+
+        // Make settings items clickable
+        const settingsItems = document.querySelectorAll('.settings-item');
+        settingsItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const label = this.querySelector('.settings-label').textContent;
+                console.log(`Clicked on: ${label}`);
+                // Here you would navigate to the respective page
+            });
+        });
+
+        // Add refresh functionality for history page
+        document.querySelector('.empty-message').addEventListener('click', function() {
+            console.log('Refreshing transactions...');
+            // Here you would implement the refresh functionality
+            // For example, show a loading spinner and fetch new transactions
+        });
+
+        // Close banner functionality
+        const promoBanner = document.querySelector('.promo-banner');
+        if (promoBanner) {
+            const closeButton = promoBanner.querySelector('.close-button');
+            if (closeButton) {
+                closeButton.addEventListener('click', function() {
+                    promoBanner.style.display = 'none';
+                });
+            }
+        }
+
+        // Initialize the page based on URL hash if needed
+        function initializePageFromHash() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash === 'history') {
+                // Simulate click on history nav item
+                document.querySelector('.nav-item[data-page="history"]').click();
+            } else if (hash === 'settings') {
+                // Simulate click on settings nav item
+                document.querySelector('.nav-item[data-page="settings"]').click();
+            } else if (hash === 'home') {
+                // Simulate click on home nav item
+                document.querySelector('.nav-item[data-page="home"]').click();
+            }
+        }
+
+        // Call initialization
+        initializePageFromHash();
+
+        // Update hash when navigating
+        navItems.forEach(item => {
+            const pageName = item.getAttribute('data-page');
+            if (pageName === 'home' || pageName === 'earn' || pageName === 'history' || pageName === 'settings') {
+                item.addEventListener('click', function() {
+                    window.location.hash = pageName;
+                });
+            }
+        });
+
+        // Make staking items clickable
+        const stakingItems = document.querySelectorAll('.staking-item');
+        stakingItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const symbol = this.querySelector('.staking-symbol').textContent;
+                console.log(`Clicked on staking option: ${symbol}`);
+                // Here you would navigate to the staking details page
+            });
+        });
+    </script>
+</body>
+</html>
