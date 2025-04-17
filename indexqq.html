@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Wallet</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            line-height: 1.5;
+            font-size: 11.4px; /* Scaled down from 16px */
+        }
+
+        .wallet-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            max-width: 357px; /* Scaled down from 500px */
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .wallet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11.4px; /* Scaled down from 16px */
+            border-bottom: 1px solid #2a2a2a;
+            position: relative;
+        }
+
+        .back-button, .info-button {
+            background: none;
+            border: none;
+            color: #8c8c8c;
+            cursor: pointer;
+            padding: 5.7px; /* Scaled down from 8px */
+        }
+
+        .back-button:hover, .info-button:hover {
+            color: #ffffff;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .header-title h1 {
+            font-size: 17.1px; /* Scaled down from 24px */
+            font-weight: 700;
+            margin-bottom: 2.9px; /* Scaled down from 4px */
+        }
+
+        .subtitle {
+            display: flex;
+            gap: 11.4px; /* Scaled down from 16px */
+            font-size: 10px; /* Scaled down from 14px */
+        }
+
+        .coin-label {
+            color: #8c8c8c;
+        }
+
+        /* Balance Section */
+        .balance-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 22.9px 11.4px; /* Scaled down from 32px 16px */
+        }
+
+        .eth-logo {
+            background-color: #ffffff;
+            border-radius: 50%;
+            width: 57.1px; /* Scaled down from 80px */
+            height: 57.1px; /* Scaled down from 80px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 17.1px; /* Scaled down from 24px */
+        }
+
+        .eth-logo svg {
+            width: 42.9px; /* Scaled down from 60px */
+            height: 42.9px; /* Scaled down from 60px */
+        }
+
+        .balance {
+            font-size: 34.3px; /* Scaled down from 48px */
+            font-weight: 700;
+            margin-bottom: 5.7px; /* Scaled down from 8px */
+        }
+
+        .balance-usd {
+            color: #8c8c8c;
+            font-size: 11.4px; /* Scaled down from 16px */
+        }
+
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 29.77px; /* 22.9px * 1.3 */
+            padding: 0 14.82px 29.77px; /* 11.4px * 1.3, 22.9px * 1.3 */
+        }
+
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7.41px; /* 5.7px * 1.3 */
+        }
+
+        .button-icon {
+            background-color: #2a2a2a;
+            border-radius: 11.4px; /* Scaled down from 16px */
+            width: 45.7px; /* Scaled down from 64px */
+            height: 45.7px; /* Scaled down from 64px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-button:hover .button-icon {
+            background-color: #3a3a3a;
+        }
+
+        .button-icon svg {
+            width: 22.23px; /* 17.1px * 1.3 */
+            height: 22.23px; /* 17.1px * 1.3 */
+        }
+
+        .button-label {
+            font-size: 13px; /* 10px * 1.3 */
+        }
+
+        /* Transactions Section */
+        .transactions-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 22.9px 11.4px; /* Scaled down from 32px 16px */
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .empty-icon {
+            background-color: #2a2a2a;
+            border-radius: 5.7px; /* Scaled down from 8px */
+            width: 85.7px; /* Scaled down from 120px */
+            height: 85.7px; /* Scaled down from 120px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 11.4px; /* Scaled down from 16px */
+        }
+
+        .empty-icon svg {
+            width: 57.1px; /* Scaled down from 80px */
+            height: 57.1px; /* Scaled down from 80px */
+        }
+
+        .empty-text {
+            color: #8c8c8c;
+            margin-bottom: 5.7px; /* Scaled down from 8px */
+        }
+
+        .empty-subtext {
+            color: #666666;
+            font-size: 10px; /* Scaled down from 14px */
+        }
+
+        .explorer-link {
+            color: #00c853;
+            text-decoration: none;
+        }
+
+        .explorer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .wallet-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 11.4px; /* Scaled down from 16px */
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .price-label {
+            color: #8c8c8c;
+            font-size: 10px; /* Scaled down from 14px */
+            margin-bottom: 2.9px; /* Scaled down from 4px */
+        }
+
+        .price-value {
+            display: flex;
+            align-items: center;
+            gap: 5.7px; /* Scaled down from 8px */
+        }
+
+        .price-amount {
+            font-family: monospace;
+            font-size: 11.4px; /* Scaled down from 16px */
+        }
+
+        .price-change {
+            font-size: 10px; /* Scaled down from 14px */
+        }
+
+        .price-change.negative {
+            color: #ff5252;
+        }
+
+        .price-change.positive {
+            color: #00c853;
+        }
+
+        .expand-button {
+            background: none;
+            border: none;
+            color: #8c8c8c;
+            cursor: pointer;
+            padding: 5.7px; /* Scaled down from 8px */
+        }
+
+        .expand-button svg {
+            width: 17.1px; /* Scaled down from 24px */
+            height: 17.1px; /* Scaled down from 24px */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 375px) {
+            .action-buttons {
+                gap: 11.4px; /* Scaled down from 16px */
+            }
+            
+            .button-icon {
+                width: 40px; /* Scaled down from 56px */
+                height: 40px; /* Scaled down from 56px */
+            }
+            
+            .balance {
+                font-size: 28.6px; /* Scaled down from 40px */
+            }
+        }
+
+        @media (min-width: 768px) {
+            .wallet-container {
+                max-width: 357px; /* Scaled down from 500px */
+                margin: 0 auto;
+                border-left: 1px solid #2a2a2a;
+                border-right: 1px solid #2a2a2a;
+            }
+        }
+
+        /* Modal Styles (Common) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 400px;
+            background-color: #121212;
+            border-radius: 16px;
+            padding: 24px;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .close-button:hover {
+            color: #fff;
+        }
+
+        /* Send ETH Modal Styles */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-label {
+            display: block;
+            color: #888;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            height: 56px;
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            color: #aaa;
+            font-size: 16px;
+            padding: 0 16px;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-color: #2e7d32;
+        }
+
+        .input-actions {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .action-text {
+            color: #4ade80;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            color: #4ade80;
+            cursor: pointer;
+        }
+
+        .eth-label {
+            color: #ddd;
+            font-weight: 500;
+        }
+
+        .usd-value {
+            color: #888;
+            margin-top: 8px;
+            margin-bottom: 48px;
+        }
+
+        .next-button {
+            width: 100%;
+            height: 56px;
+            background-color: #2e7d32;
+            border: none;
+            border-radius: 28px;
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .next-button:hover {
+            background-color: #266e29;
+        }
+
+        /* Receive ETH Modal Styles */
+        .receive-modal {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            border-radius: 0;
+            max-width: 100%;
+            background-color: #121212;
+        }
+
+        .receive-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .receive-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .warning-message {
+            background-color: rgba(255, 193, 7, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .warning-icon {
+            color: #ffc107;
+            flex-shrink: 0;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .eth-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .eth-circle {
+            background-color: white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .eth-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .eth-fullname {
+            color: #888;
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .qr-code {
+            background-color: white;
+            border-radius: 12px;
+            padding: 16px;
+            width: 100%;
+            aspect-ratio: 1/1;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wallet-address {
+            font-family: monospace;
+            font-size: 14px;
+            text-align: center;
+            color: #e0e0e0;
+            word-break: break-all;
+            margin-bottom: 32px;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-around;
+            margin: 24px 16px;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-circle {
+            background-color: #2a2a2a;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .action-circle:hover {
+            background-color: #3a3a3a;
+        }
+
+        .action-name {
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .deposit-options {
+            margin-top: auto;
+            padding: 24px 16px;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .deposit-option {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+            cursor: pointer;
+        }
+
+        .deposit-option:hover {
+            background-color: #1a1a1a;
+        }
+
+        .deposit-icon {
+            background-color: #2e7d32;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deposit-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .deposit-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .deposit-subtitle {
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="wallet-container">
+        <!-- Header -->
+        <header class="wallet-header">
+            <button class="back-button" aria-label="Go back">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="header-title">
+                <h1>ETH</h1>
+                <div class="subtitle">
+                    <span class="coin-label">COIN</span>
+                    <span class="coin-name">Ethereum</span>
+                </div>
+            </div>
+            <button class="info-button" aria-label="Information">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 16V12M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="wallet-content">
+            <!-- Balance Section -->
+            <section class="balance-section">
+                <div class="eth-logo">
+                    <svg width="43" height="43" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M30 9L29.7 10.05V38.1L30 38.4L43.2 30.75L30 9Z" fill="#343434"/>
+                        <path d="M30 9L16.8 30.75L30 38.4V24.75V9Z" fill="#8C8C8C"/>
+                        <path d="M30 40.95L29.85 41.1V51L30 51.45L43.2 33.3L30 40.95Z" fill="#3C3C3B"/>
+                        <path d="M30 51.45V40.95L16.8 33.3L30 51.45Z" fill="#8C8C8C"/>
+                        <path d="M30 38.4L43.2 30.75L30 24.75V38.4Z" fill="#141414"/>
+                        <path d="M16.8 30.75L30 38.4V24.75L16.8 30.75Z" fill="#393939"/>
+                    </svg>
+                </div>
+                <h2 class="balance">0 ETH</h2>
+                <p class="balance-usd">≈ 0,00 $</p>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="action-buttons">
+                <div class="action-button" id="send-button">
+                    <div class="button-icon">
+                        <!-- Send Icon: Paper Plane -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <span class="button-label">Отправить</span>
+                </div>
+                <div class="action-button" id="receive-button">
+                    <div class="button-icon">
+                        <!-- Receive Icon: Download -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <span class="button-label">Получить</span>
+                </div>
+                <div class="action-button">
+                    <div class="button-icon">
+                        <!-- Swap Icon: Refresh/Exchange -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 1L21 5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M3 11V9C3 7.93913 3.42143 6.92172 4.17157 6.17157C4.92172 5.42143 5.93913 5 7 5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7 23L3 19L7 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 13V15C21 16.0609 20.5786 17.0783 19.8284 17.8284C19.0783 18.5786 18.0609 19 17 19H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <span class="button-label">Обменять</span>
+                </div>
+            </section>
+        </main>
+
+        <!-- Transactions Section -->
+        <section class="transactions-section">
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <svg width="57" height="57" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#B0B0B0;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#D0D0D0;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#B0B0B0;stop-opacity:1" />
+                          </linearGradient>
+                          <filter id="shadow">
+                            <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.3)" />
+                          </filter>
+                        </defs>
+                      
+                        <g filter="url(#shadow)">
+                          <path d="M60 33.3333H53.3333V20C53.3333 18.1667 51.8333 16.6667 50 16.6667H23.3333C21.5 16.6667 20 18.1667 20 20V60C20 61.8333 21.5 63.3333 23.3333 63.3333H50C51.8333 63.3333 53.3333 61.8333 53.3333 60V46.6667H60" stroke="url(#metalGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                          <circle cx="36.6667" cy="40" r="13.3333" stroke="url(#metalGradient)" stroke-width="4"/>
+                          <path d="M46.6667 50L53.3333 56.6667" stroke="url(#metalGradient)" stroke-width="4" stroke-linecap="round"/>
+                          <path d="M30 36.6667H43.3333" stroke="#444" stroke-width="3" stroke-linecap="round"/>
+                          <path d="M30 43.3333H43.3333" stroke="#444" stroke-width="3" stroke-linecap="round"/>
+                        </g>
+                    </svg>
+                </div>
+                <p class="empty-text">Transactions will appear here.</p>
+                <p class="empty-subtext">
+                    Can't find your transaction? 
+                    <a href="#" class="explorer-link">Check explorer</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="wallet-footer">
+            <div class="price-info">
+                <p class="price-label">Current REV price</p>
+                <div class="price-value">
+                    <span class="price-amount">1581,11$</span>
+                    <span class="price-change negative">-2.00%</span>
+                </div>
+            </div>
+            <button class="expand-button" aria-label="Expand">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </footer>
+    </div>
+
+    <!-- Send ETH Modal -->
+    <div class="modal-overlay" id="send-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Send ETH</h2>
+                <button class="close-button" id="close-send-modal">✕</button>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Address or Domain Name</label>
+                <div class="input-container">
+                    <input type="text" class="input-field" id="address-input" placeholder="Search or Enter">
+                    <div class="input-actions">
+                        <span class="action-text" id="paste-button">Paste</span>
+                        <svg class="action-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                        </svg>
+                        <svg class="action-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Amount</label>
+                <div class="input-container">
+                    <input type="text" class="input-field" id="amount-input" placeholder="ETH Amount">
+                    <div class="input-actions">
+                        <span class="eth-label">ETH</span>
+                        <span class="action-text" id="max-button">Max</span>
+                    </div>
+                </div>
+                <p class="usd-value" id="usd-value">≈ $0.00</p>
+            </div>
+
+            <button class="next-button" id="next-button">Next</button>
+        </div>
+    </div>
+
+    <!-- Receive ETH Modal -->
+    <div class="modal-overlay" id="receive-modal">
+        <div class="modal receive-modal">
+            <div class="receive-header">
+                <button class="back-button" id="close-receive-modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <h2 class="receive-title">Receive</h2>
+                <button class="info-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 16V12M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="warning-message">
+                <div class="warning-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="warning-text">
+                    Only send Ethereum (ETH) assets to this address. Other assets will be lost forever.
+                </div>
+            </div>
+
+            <div class="eth-info">
+                <div class="eth-circle">
+                    <svg width="20" height="20" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M30 9L29.7 10.05V38.1L30 38.4L43.2 30.75L30 9Z" fill="#343434"/>
+                        <path d="M30 9L16.8 30.75L30 38.4V24.75V9Z" fill="#8C8C8C"/>
+                        <path d="M30 40.95L29.85 41.1V51L30 51.45L43.2 33.3L30 40.95Z" fill="#3C3C3B"/>
+                        <path d="M30 51.45V40.95L16.8 33.3L30 51.45Z" fill="#8C8C8C"/>
+                        <path d="M30 38.4L43.2 30.75L30 24.75V38.4Z" fill="#141414"/>
+                        <path d="M16.8 30.75L30 38.4V24.75L16.8 30.75Z" fill="#393939"/>
+                    </svg>
+                </div>
+                <span class="eth-name">ETH</span>
+                <span class="eth-fullname">Ethereum</span>
+            </div>
+
+            <div class="qr-container">
+                <div class="qr-code">
+                    <svg width="100%" height="100%" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="200" height="200" fill="white"/>
+                        <path d="M40 40H60V60H40V40ZM60 40H80V60H60V40ZM80 40H100V60H80V40ZM120 40H140V60H120V40ZM140 40H160V60H140V40ZM40 60H60V80H40V60ZM80 60H100V80H80V60ZM100 60H120V80H100V60ZM140 60H160V80H140V60ZM40 80H60V100H40V80ZM60 80H80V100H60V80ZM100 80H120V100H100V80ZM120 80H140V100H120V80ZM140 80H160V100H140V80ZM40 100H60V120H40V100ZM60 100H80V120H60V100ZM100 100H120V120H100V100ZM140 100H160V120H140V100ZM40 120H60V140H40V120ZM80 120H100V140H80V120ZM120 120H140V140H120V120ZM40 140H60V160H40V140ZM60 140H80V160H60V140ZM80 140H100V160H80V140ZM120 140H140V160H120V140ZM140 140H160V160H140V140Z" fill="black"/>
+                        <path d="M100 100 L100 100 A10 10 0 0 1 90 90 L90 90 A10 10 0 0 1 100 80 L100 80 A10 10 0 0 1 110 90 L110 90 A10 10 0 0 1 100 100 Z" fill="black"/>
+                    </svg>
+                </div>
+                <p class="wallet-address">0x1aA14c7ff3a60b9aa333E5b38fF8f3aC1C6453F6</p>
+            </div>
+
+            <div class="action-row">
+                <div class="action-item">
+                    <div class="action-circle" id="copy-address">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="9" y="9" width="13" height="13" rx="2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <span class="action-name">Copy</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-circle" id="set-amount">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 8V16M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <span class="action-name">Set Amount</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-circle" id="share-address">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="18" cy="5" r="3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="6" cy="12" r="3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="18" cy="19" r="3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <span class="action-name">Share</span>
+                </div>
+            </div>
+
+            <div class="deposit-options">
+                <div class="deposit-option">
+                    <div class="deposit-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7 10L12 15L17 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="deposit-text">
+                        <div class="deposit-title">Deposit from exchange</div>
+                        <div class="deposit-subtitle">By direct transfer from your account</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Button click effects
+            const buttons = document.querySelectorAll('.action-button, .back-button, .info-button, .expand-button');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Add a subtle animation or effect
+                    this.style.opacity = '0.7';
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                    }, 150);
+                    
+                    // For demo purposes, log which button was clicked
+                    if (this.querySelector('.button-label')) {
+                        console.log(`${this.querySelector('.button-label').textContent} button clicked`);
+                    } else if (this.classList.contains('back-button')) {
+                        console.log('Back button clicked');
+                    } else if (this.classList.contains('info-button')) {
+                        console.log('Info button clicked');
+                    } else if (this.classList.contains('expand-button')) {
+                        console.log('Expand button clicked');
+                        toggleFooterExpand();
+                    }
+                });
+            });
+            
+            // Explorer link click
+            const explorerLink = document.querySelector('.explorer-link');
+            explorerLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Explorer link clicked');
+                // In a real app, this would navigate to the blockchain explorer
+                alert('This would navigate to the Ethereum blockchain explorer');
+            });
+            
+            // Toggle footer expand (for demonstration)
+            function toggleFooterExpand() {
+                const footer = document.querySelector('.wallet-footer');
+                const expandButton = document.querySelector('.expand-button svg');
+                
+                if (footer.classList.contains('expanded')) {
+                    footer.classList.remove('expanded');
+                    expandButton.style.transform = 'rotate(0deg)';
+                } else {
+                    footer.classList.add('expanded');
+                    expandButton.style.transform = 'rotate(180deg)';
+                }
+            }
+            
+            // Send ETH Modal Functionality
+            const sendButton = document.getElementById('send-button');
+            const sendModal = document.getElementById('send-modal');
+            const closeSendModal = document.getElementById('close-send-modal');
+            const addressInput = document.getElementById('address-input');
+            const amountInput = document.getElementById('amount-input');
+            const pasteButton = document.getElementById('paste-button');
+            const maxButton = document.getElementById('max-button');
+            const nextButton = document.getElementById('next-button');
+            
+            // Open send modal when send button is clicked
+            sendButton.addEventListener('click', function() {
+                sendModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            });
+            
+            // Close send modal when close button is clicked
+            closeSendModal.addEventListener('click', function() {
+                sendModal.classList.remove('active');
+                document.body.style.overflow = ''; // Re-enable scrolling
+            });
+            
+            // Close send modal when clicking outside
+            sendModal.addEventListener('click', function(e) {
+                if (e.target === sendModal) {
+                    sendModal.classList.remove('active');
+                    document.body.style.overflow = ''; // Re-enable scrolling
+                }
+            });
+            
+            // Paste functionality
+            pasteButton.addEventListener('click', async function() {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    addressInput.value = text;
+                    updateUsdValue();
+                } catch (err) {
+                    console.error('Failed to read clipboard: ', err);
+                }
+            });
+            
+            // Max button functionality (simulated)
+            maxButton.addEventListener('click', function() {
+                // In a real app, this would get the max available ETH balance
+                amountInput.value = '1.0';
+                updateUsdValue();
+            });
+            
+            // Next button functionality
+            nextButton.addEventListener('click', function() {
+                if (!addressInput.value) {
+                    alert('Please enter an address');
+                    return;
+                }
+                
+                if (!amountInput.value) {
+                    alert('Please enter an amount');
+                    return;
+                }
+                
+                // In a real app, this would proceed to the next step
+                alert(`Sending ${amountInput.value} ETH to ${addressInput.value}`);
+                // Close the modal after successful submission
+                sendModal.classList.remove('active');
+                document.body.style.overflow = ''; // Re-enable scrolling
+            });
+            
+            // Update USD value when amount changes
+            amountInput.addEventListener('input', updateUsdValue);
+            
+            function updateUsdValue() {
+                const ethAmount = parseFloat(amountInput.value) || 0;
+                // In a real app, this would use a real ETH/USD exchange rate
+                const ethPrice = 3500; // Example ETH price in USD
+                const usdValue = (ethAmount * ethPrice).toFixed(2);
+                document.getElementById('usd-value').textContent = `≈ $${usdValue}`;
+            }
+            
+            // Receive ETH Modal Functionality
+            const receiveButton = document.getElementById('receive-button');
+            const receiveModal = document.getElementById('receive-modal');
+            const closeReceiveModal = document.getElementById('close-receive-modal');
+            const copyAddress = document.getElementById('copy-address');
+            const setAmount = document.getElementById('set-amount');
+            const shareAddress = document.getElementById('share-address');
+            
+            // Open receive modal when receive button is clicked
+            receiveButton.addEventListener('click', function() {
+                receiveModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            });
+            
+            // Close receive modal when close button is clicked
+            closeReceiveModal.addEventListener('click', function() {
+                receiveModal.classList.remove('active');
+                document.body.style.overflow = ''; // Re-enable scrolling
+            });
+            
+            // Copy address functionality
+            copyAddress.addEventListener('click', function() {
+                const address = document.querySelector('.wallet-address').textContent;
+                navigator.clipboard.writeText(address)
+                    .then(() => {
+                        alert('Address copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy address: ', err);
+                    });
+            });
+            
+            // Set amount functionality
+            setAmount.addEventListener('click', function() {
+                alert('This would open a dialog to set a requested amount');
+            });
+            
+            // Share address functionality
+            shareAddress.addEventListener('click', function() {
+                alert('This would open sharing options');
+            });
+            
+            // Simulate price updates (for demonstration)
+            function simulatePriceUpdates() {
+                const priceAmount = document.querySelector('.price-amount');
+                const priceChange = document.querySelector('.price-change');
+                
+                setInterval(() => {
+                    // Generate random price fluctuations
+                    const currentPrice = parseFloat(priceAmount.textContent);
+                    const randomChange = (Math.random() * 0.000001 - 0.0000005).toFixed(9);
+                    const newPrice = (currentPrice + parseFloat(randomChange)).toFixed(2);
+                    
+                    // Update price display
+                    priceAmount.textContent = newPrice + '$';
+                    
+                    // Update price change percentage
+                    const changePercent = (Math.random() * 6 - 3).toFixed(2);
+                    priceChange.textContent = (changePercent >= 0 ? '+' : '') + changePercent + '%';
+                    
+                    // Update color based on positive/negative change
+                    if (parseFloat(changePercent) >= 0) {
+                        priceChange.classList.remove('negative');
+                        priceChange.classList.add('positive');
+                    } else {
+                        priceChange.classList.remove('positive');
+                        priceChange.classList.add('negative');
+                    }
+                }, 30000); // Update every 30 seconds
+            }
+            
+            // Uncomment to enable price simulation
+            // simulatePriceUpdates();
+        });
+    </script>
+</body>
+</html>
